@@ -1,0 +1,13 @@
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  user-select: none;
+}
+
+td {
+  border: 1px solid black;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  font-size: 60px;
+}
