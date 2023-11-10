@@ -1,94 +1,99 @@
-import { useState } from 'react';
+import { useReducer, useRef } from 'react';
+import confetti from 'canvas-confetti';
+
+import {
+  updateBoard,
+  updateDraw,
+  updateWinner,
+  updatePlayerOne,
+  updatePlayerTwo,
+  updateCounter,
+} from './store/actions';
+import { createEmptyBoard, isWinner } from './utils';
 
 import './App.css';
 
-function App() {
-  let [counter, setCounter] = useState(0);
+const initialState = {
+  board: createEmptyBoard(),
+  draw: 0,
+  winner: null,
+  playerOne: 0,
+  playerTwo: 0,
+  counter: 0,
+  modal: false,
+};
 
-  let [spaces, setSpaces] = useState([
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ]);
+function reducer(state, action) {
+  const { payload, value } = action;
 
-  let [player, setPlayer] = useState(false);
+  if (payload === 'UPDATE_WINNER') return { ...state, winner: value };
 
-  function isWinner(player) {
-    for (let i = 0; i < 3; i++) {
-      if (
-        spaces[i][0] == player &&
-        spaces[i][1] == player &&
-        spaces[i][2] == player
-      ) {
-        return true;
-      } else if (
-        spaces[0][i] == player &&
-        spaces[1][i] == player &&
-        spaces[2][i] == player
-      ) {
-        return true;
-      }
-    }
-    if (
-      spaces[0][0] == player &&
-      spaces[1][1] == player &&
-      spaces[2][2] == player
-    ) {
-      return true;
-    } else if (
-      spaces[0][2] == player &&
-      spaces[1][1] == player &&
-      spaces[2][0] == player
-    ) {
-      return true;
-    }
-  }
+  if (payload === 'UPDATE_BOARD') return { ...state, board: value };
 
-  function handleClick(x, y) {
-    const newSpaces = [...spaces];
-    setCounter(counter + 1);
+  if (payload === 'UPDATE_DRAW') return { ...state, draw: value };
 
-    if (newSpaces[x][y]) {
-      return;
-    } else {
-      setPlayer(!player);
-      newSpaces[x][y] = player ? 'X' : 'O';
-    }
+  if (payload === 'UPDATE_PLAYER_ONE') return { ...state, playerOne: value };
 
-    console.log(counter);
+  if (payload === 'UPDATE_PLAYER_TWO') return { ...state, playerTwo: value };
 
-    if (isWinner('X')) {
-      alert('X is the winner');
-    } else if (isWinner('O')) {
-      alert('O is the winner');
-    } else if (counter == 8) {
-      alert('Draw');
+  if (payload === 'UPDATE_COUNTER') return { ...state, counter: value };
+
+  if (payload === 'UPDATE_MODAL') return { ...state, modal: value };
+
+  return state;
+}
+
+export default function App() {
+  const modalRef = useRef();
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { board, draw, winner, playerOne, playerTwo, counter } = state;
+
+  const handleClick = (x, y) => {
+    if (board[x][y] || !!winner) return;
+
+    const newBoard = [...board];
+    const currentTurn = counter % 2 ? 'X' : 'O';
+
+    newBoard[x][y] = currentTurn;
+    dispatch(updateCounter(counter + 1));
+    dispatch(updateBoard(newBoard));
+
+    if (isWinner(newBoard, currentTurn)) {
+      confetti();
+      dispatch(updateWinner(currentTurn));
+
+      if (currentTurn === 'X') return dispatch(updatePlayerOne(playerOne + 1));
+
+      modalRef.current.show();
+      setTimeout(() => {
+        modalRef.current.classList.toggle('fade-out-animation');
+        modalRef.current.close();
+      }, 2000);
+
+      return dispatch(updatePlayerTwo(playerTwo + 1));
     }
 
-    setSpaces(newSpaces);
-  }
-
-  function handleClear() {
-    const newSpaces = [...spaces];
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        newSpaces[i][j] = null;
-      }
+    if (counter == 8) {
+      dispatch(updateDraw(draw + 1));
     }
-    setCounter(0);
-    setSpaces(newSpaces);
-  }
+  };
+
+  const handleClear = () => {
+    const newBoard = createEmptyBoard();
+    dispatch(updateCounter(0));
+    dispatch(updateBoard(newBoard));
+    dispatch(updateWinner(null));
+  };
 
   return (
     <div>
-      <table>
+      <table className="board">
         <tbody>
-          {spaces.map((element, index) => (
+          {board.map((element, index) => (
             <tr key={index}>
               {element.map((e, i) => (
                 <td
-                  data-x={index}
-                  data-y={i}
+                  className="space"
                   onClick={() => handleClick(index, i)}
                   key={i}
                 >
@@ -99,9 +104,23 @@ function App() {
           ))}
         </tbody>
       </table>
-      <button onClick={handleClear}>Clear</button>
+      <button onClick={handleClear}>Reset</button>
+      <table className="results">
+        <tbody>
+          <tr>
+            <th className="title">Player 1</th>
+            <th className="title">Player 2</th>
+            <th className="title">Draw</th>
+          </tr>
+          <tr>
+            <td className="points">{playerTwo}</td>
+            <td className="points">{playerOne}</td>
+            <td className="points">{draw}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <dialog ref={modalRef}>Test</dialog>
     </div>
   );
 }
-
-export default App;
