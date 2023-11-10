@@ -1,13 +1,74 @@
-table {
-  border: 1px solid black;
+body {
+  background-color: #1a1a1a;
+}
+
+div {
+  display: grid;
+  place-items: center;
+  height: 90vh;
+}
+
+h1 {
+  color: #f1f1f1;
+  font-size: 50px;
+}
+
+.board {
   border-collapse: collapse;
   user-select: none;
 }
 
-td {
-  border: 1px solid black;
-  height: 100px;
-  width: 100px;
+.space {
+  border: 1px solid #f1f1f1;
+  color: #f1f1f1;
+  height: 150px;
+  width: 150px;
   text-align: center;
   font-size: 60px;
+}
+
+button {
+  border: 1px solid #f1f1f1;
+  color: #f1f1f1;
+  background-color: #1a1a1a;
+  font-size: 25px;
+  padding: 10px 20px;
+  border-radius: 15px;
+}
+
+.results {
+  color: #f1f1f1;
+  font-size: 25px;
+  width: 100%;
+  text-align: center;
+  height: 60px;
+}
+
+dialog {
+  background-color: #1a1a1a;
+  padding: 20%;
+  border: none;
+  color: #f1f1f1;
+  font-size: 100px;
+  opacity: 0.9;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+.fade-out-animation {
+  opacity: 0;
+  /* animation-name: modal-animation;
+  animation-delay: 1s;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out; */
+}
+
+@keyframes modal-animation {
+  0% {
+    background-color: red;
+  }
+
+  100% {
+    background-color: green;
+  }
 }
