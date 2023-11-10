@@ -44,7 +44,10 @@ button {
   height: 60px;
 }
 
-dialog {
+.modal {
+  height: 100vh;
+  z-index: 100;
+  position: fixed;
   background-color: #1a1a1a;
   padding: 20%;
   border: none;

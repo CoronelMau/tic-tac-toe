@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 
 import {
@@ -23,7 +23,7 @@ const initialState = {
   modal: false,
 };
 
-function reducer(state, action) {
+function reducer(state = initialState, action) {
   const { payload, value } = action;
 
   if (payload === 'UPDATE_WINNER') return { ...state, winner: value };
@@ -45,17 +45,18 @@ function reducer(state, action) {
 
 export default function App() {
   const modalRef = useRef();
+  const [isOpen, setIsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const { board, draw, winner, playerOne, playerTwo, counter } = state;
 
   const openModal = () => {
-    modalRef.current.show();
+    setIsOpen(true);
 
     setTimeout(() => {
       modalRef.current.classList.toggle('fade-out-animation');
-      modalRef.current.close();
 
       setTimeout(() => {
+        setIsOpen(false);
         modalRef.current.classList.toggle('fade-out-animation');
       }, 1100);
     }, 2000);
@@ -77,7 +78,7 @@ export default function App() {
 
       openModal();
 
-      if (currentTurn === 'X') return dispatch(updatePlayerOne(playerOne + 1));
+      if (currentTurn === 'O') return dispatch(updatePlayerOne(playerOne + 1));
 
       return dispatch(updatePlayerTwo(playerTwo + 1));
     }
@@ -96,12 +97,13 @@ export default function App() {
 
   return (
     <div>
-      <table className="board">
+      <table data-testid="board" className="board">
         <tbody>
           {board.map((element, index) => (
             <tr key={index}>
               {element.map((e, i) => (
                 <td
+                  data-testid={`cell-${index}-${i}`}
                   className="space"
                   onClick={() => handleClick(index, i)}
                   key={i}
@@ -113,23 +115,35 @@ export default function App() {
           ))}
         </tbody>
       </table>
+
       <button onClick={handleClear}>Reset</button>
-      <table className="results">
+
+      <table data-testid="results" className="results">
         <tbody>
           <tr>
-            <th className="title">Player 1</th>
-            <th className="title">Player 2</th>
+            <th className="title">Player O</th>
+            <th className="title">Player X</th>
             <th className="title">Draw</th>
           </tr>
           <tr>
-            <td className="points">{playerTwo}</td>
-            <td className="points">{playerOne}</td>
-            <td className="points">{draw}</td>
+            <td data-testid="O-score" className="points">
+              {playerOne}
+            </td>
+            <td data-testid="X-score" className="points">
+              {playerTwo}
+            </td>
+            <td data-testid="draw-score" className="points">
+              {draw}
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <dialog ref={modalRef}>{winner} wins!</dialog>
+      {isOpen && (
+        <div ref={modalRef} className="modal">
+          {winner} wins!
+        </div>
+      )}
     </div>
   );
 }

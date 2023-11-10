@@ -30,7 +30,7 @@ describe('Utils functions', () => {
     expect(isWinner(board, '🅾️')).not.toBeTruthy();
   });
 
-  it('> Is winner checking winner is x', () => {
+  it('> Is winner checking winner is not o', () => {
     const board = [
       ['x', '', 'o'],
       ['x', '', ''],
@@ -38,6 +38,16 @@ describe('Utils functions', () => {
     ];
 
     expect(isWinner(board, 'o')).not.toBeTruthy();
+  });
+
+  it('> Is winner checking winner is x', () => {
+    const board = [
+      ['x', '', 'o'],
+      ['x', '', ''],
+      ['x', 'o', 'o'],
+    ];
+
+    expect(isWinner(board, 'x')).toBeTruthy();
   });
 
   it('> Is winner checking winner is 🅾️', () => {
@@ -49,4 +59,6 @@ describe('Utils functions', () => {
 
     expect(isWinner(board, 'o')).not.toBeTruthy();
   });
+
+  //TODO: add all functions.
 });
