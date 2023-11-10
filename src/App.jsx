@@ -48,6 +48,19 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { board, draw, winner, playerOne, playerTwo, counter } = state;
 
+  const openModal = () => {
+    modalRef.current.show();
+
+    setTimeout(() => {
+      modalRef.current.classList.toggle('fade-out-animation');
+      modalRef.current.close();
+
+      setTimeout(() => {
+        modalRef.current.classList.toggle('fade-out-animation');
+      }, 1100);
+    }, 2000);
+  };
+
   const handleClick = (x, y) => {
     if (board[x][y] || !!winner) return;
 
@@ -62,13 +75,9 @@ export default function App() {
       confetti();
       dispatch(updateWinner(currentTurn));
 
-      if (currentTurn === 'X') return dispatch(updatePlayerOne(playerOne + 1));
+      openModal();
 
-      modalRef.current.show();
-      setTimeout(() => {
-        modalRef.current.classList.toggle('fade-out-animation');
-        modalRef.current.close();
-      }, 2000);
+      if (currentTurn === 'X') return dispatch(updatePlayerOne(playerOne + 1));
 
       return dispatch(updatePlayerTwo(playerTwo + 1));
     }
@@ -120,7 +129,7 @@ export default function App() {
         </tbody>
       </table>
 
-      <dialog ref={modalRef}>Test</dialog>
+      <dialog ref={modalRef}>{winner} wins!</dialog>
     </div>
   );
 }

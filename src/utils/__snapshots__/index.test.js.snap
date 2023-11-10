@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Utils functions > Create empty board 1`] = `
+[
+  [
+    null,
+    null,
+    null,
+  ],
+  [
+    null,
+    null,
+    null,
+  ],
+  [
+    null,
+    null,
+    null,
+  ],
+]
+`;
