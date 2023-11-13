@@ -8,55 +8,36 @@ import {
   updatePlayerOne,
   updatePlayerTwo,
   updateCounter,
+  updateModal,
 } from './store/actions';
 import { createEmptyBoard, isWinner } from './utils';
+import reducer from './store/reducer';
 
 import './App.css';
 
-const initialState = {
-  board: createEmptyBoard(),
-  draw: 0,
-  winner: null,
-  playerOne: 0,
-  playerTwo: 0,
-  counter: 0,
-  modal: false,
-};
-
-function reducer(state = initialState, action) {
-  const { payload, value } = action;
-
-  if (payload === 'UPDATE_WINNER') return { ...state, winner: value };
-
-  if (payload === 'UPDATE_BOARD') return { ...state, board: value };
-
-  if (payload === 'UPDATE_DRAW') return { ...state, draw: value };
-
-  if (payload === 'UPDATE_PLAYER_ONE') return { ...state, playerOne: value };
-
-  if (payload === 'UPDATE_PLAYER_TWO') return { ...state, playerTwo: value };
-
-  if (payload === 'UPDATE_COUNTER') return { ...state, counter: value };
-
-  if (payload === 'UPDATE_MODAL') return { ...state, modal: value };
-
-  return state;
-}
-
 export default function App() {
+  const initialState = {
+    board: createEmptyBoard(),
+    draw: 0,
+    winner: null,
+    playerOne: 0,
+    playerTwo: 0,
+    counter: 0,
+    modal: false,
+  };
+
   const modalRef = useRef();
-  const [isOpen, setIsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { board, draw, winner, playerOne, playerTwo, counter } = state;
+  const { board, draw, winner, playerOne, playerTwo, counter, modal } = state;
 
   const openModal = () => {
-    setIsOpen(true);
+    dispatch(updateModal(true));
 
     setTimeout(() => {
       modalRef.current.classList.toggle('fade-out-animation');
 
       setTimeout(() => {
-        setIsOpen(false);
+        dispatch(updateModal(false));
         modalRef.current.classList.toggle('fade-out-animation');
       }, 1100);
     }, 2000);
@@ -116,7 +97,9 @@ export default function App() {
         </tbody>
       </table>
 
-      <button onClick={handleClear}>Reset</button>
+      <button data-testid="resetButton" onClick={handleClear}>
+        Reset
+      </button>
 
       <table data-testid="results" className="results">
         <tbody>
@@ -139,8 +122,8 @@ export default function App() {
         </tbody>
       </table>
 
-      {isOpen && (
-        <div ref={modalRef} className="modal">
+      {modal && (
+        <div data-testid="modal" ref={modalRef} className="modal">
           {winner} wins!
         </div>
       )}
