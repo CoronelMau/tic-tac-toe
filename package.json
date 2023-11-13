@@ -15,6 +15,9 @@
     "resetMocks": true,
     "testEnvironment": "jsdom",
     "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "src/main.jsx"
+    ],
     "coverageReporters": [
       "json",
       "html"
