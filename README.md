@@ -10,10 +10,28 @@ Every main files has it's own test with the name /.test.jsx. Each one of them ha
 
 The following is the list of depencencies used for this project:
 
-- canvas-confetti
-- babel
+- @babel/preset-env
+- @babel/preset-react
+- @testing-library/jest-dom
+- @testing-library/react
+- @types/jest
+- @types/react
+- @types/react-dom
+- @vitejs/plugin-react
+- eslint
+- eslint-plugin-react
+- eslint-plugin-react-hooks
+- eslint-plugin-react-refresh
+- identity-obj-proxy
 - jest
-- testing-library
+- jest-canvas-mock
+- jest-environment-jsdom
+- jest-svg-transformer
+- react-test-renderer
+- vite
+- canvas-confetti
+- react
+- react-dom
 
 For installing, you can use the command:
 
