@@ -6,6 +6,9 @@ For this project I'm using React with Vite, as main coding library, and Css with
 
 Every main files has it's own test with the name /.test.jsx. Each one of them has the complete test so the coverage it's at 100%.
 
+You can visit the project in:
+https://tic-tac-toe-beta-dun-94.vercel.app/
+
 ### Install dependencies
 
 The following is the list of depencencies used for this project:
